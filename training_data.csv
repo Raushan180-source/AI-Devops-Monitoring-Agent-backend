@@ -1,0 +1,8 @@
+cpu,memory,disk,risk
+10,30,40,Low
+20,50,60,Low
+70,80,60,High
+85,90,95,High
+50,60,70,Medium
+65,70,80,High
+30,40,50,Low
