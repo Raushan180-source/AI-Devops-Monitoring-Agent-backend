@@ -7,26 +7,29 @@ from .background_agent import start_agent
 
 app = FastAPI(title="Hackathon System Monitor")
 
-# 🔹 CORS setup (for React)
+# 🔹 CORS setup (React + Vercel)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://ai-devops-monitoring-agent-frontend.vercel.app"  # 👈 update if URL different
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 🔹 Start background agent
-start_agent()
+# ✅ Start background agent SAFELY
+@app.on_event("startup")
+def startup_event():
+    start_agent()
 
 @app.get("/")
 def root():
     return {"message": "System Monitor Backend Running"}
 
-# 🔹 THIS ENDPOINT MATCHES Dashboard.js
+# 🔹 Dashboard metrics endpoint
 @app.get("/metrics")
 def metrics():
     metrics = get_system_metrics()
