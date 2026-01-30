@@ -13,12 +13,23 @@ def check_alert(risk):
 
 def run_continuous_monitor(interval=10):
     while True:
-        metrics = get_system_metrics()
-        risk = predict_risk(metrics["cpu"], metrics["memory"], metrics["disk"])
-        check_alert(risk)
+        try:
+            metrics = get_system_metrics()
+            risk = predict_risk(
+                metrics["cpu"],
+                metrics["memory"],
+                metrics["disk"]
+            )
+            check_alert(risk)
+        except Exception as e:
+            print("Background agent error:", e)
+
         time.sleep(interval)
 
-# function to start agent in a separate thread
+# ✅ function to start agent in a separate thread
 def start_agent():
-    thread = threading.Thread(target=run_continuous_monitor, daemon=True)
+    thread = threading.Thread(
+        target=run_continuous_monitor,
+        daemon=True
+    )
     thread.start()
